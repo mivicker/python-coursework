@@ -103,6 +103,37 @@ def get_available_letters(letters_guessed):
             continue
     return display_letters      
     
+def collect_new_guess(seret_word, letters_guessed, guesses):
+    '''    
+    Bulk of the guessing mechanism.
+    Input: letters_guessed
+    Output: updated letters_guessed
+    '''
+    print("\nNumber of guesses left: " + str(6 - guesses))
+    print(str(get_guessed_word(secret_word, letters_guessed)))
+    print("Letters remaining " + str(get_available_letters(letters_guessed)))
+    
+    new_letter = ""
+    while True:
+        new_letter = input("Please enter a letter: ")
+        if len(new_letter) == 0:
+            print("You didn't enter a letter...")
+        elif len(new_letter) > 1:
+            print("That's too many!!")
+        elif new_letter in letters_guessed:
+            print("C'mon you already guessed that one.")
+        else:
+            break
+    
+    if new_letter in secret_word:
+        print("\nNice you got one!")
+        bad_guess = 0
+    else:
+        print("\nNo very, very wrong...")
+        bad_guess = 1
+        
+    letters_guessed.append(new_letter)
+    return bad_guess, letters_guessed
     
 
 def hangman(secret_word):
@@ -130,9 +161,21 @@ def hangman(secret_word):
     
     Follows the other limitations detailed in the problem write-up.
     '''
-    # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
-
+    letters_guessed = []
+    guesses = 0
+    while True:
+        
+        if is_word_guessed(secret_word, letters_guessed):
+            print("It wasn't that hard, but yeah the word was " + str(secret_word) + ".")
+            break
+        
+        elif guesses < 6:
+            bad_guess, letters_guessed = collect_new_guess(secret_word, letters_guessed, guesses)
+            guesses += bad_guess
+        
+        else:
+            print("Sorry fool, you ran out of guesses. The word was obviously " + str(secret_word + "."))
+            break
 
 
 # When you've completed your hangman function, scroll down to the bottom
